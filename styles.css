@@ -1,0 +1,52 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    overflow: hidden;
+}
+
+main {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+}
+
+.grid {
+    width: 570px;
+    height: 570px;
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid white;
+}
+
+.grid div {
+    width: 30px;
+    height: 30px;
+    /* box-shadow: 1px 1px white; */
+}
+
+.ship {
+    background: green;
+    background: url(./assets/ship.png);
+    background-repeat: no-repeat;
+}
+
+.shot {
+    background: url(./assets/shot2.png);
+}
+
+.enemy {
+    background: url(./assets/enemy.png);
+    background-repeat: no-repeat;
+}
+
+.img2 {
+    background: url(./assets/enemy2.png);
+    background-repeat: no-repeat;
+}
+
