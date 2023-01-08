@@ -3,11 +3,11 @@ const gameStatus = {
     victory: false,
     poused: false,
     controller: 0,
-    speed: 500
+    speed: 500,
+    score: 0,
 }
 
 const shipData = {
-    // currentPositon: 263,
     currentPositon: 332,
     direction: 1,
     stop: false
@@ -63,9 +63,6 @@ function renderEnemy() {
 
 function moveShip(direction) {
     shipData.currentPositon += direction
-    // shipData.currentPositon > 271 && shipData.currentPositon--
-    // shipData.currentPositon < 255 && shipData.currentPositon++
-
     shipData.currentPositon > 341 && shipData.currentPositon--
     shipData.currentPositon < 323 && shipData.currentPositon++
 }
@@ -112,6 +109,24 @@ function updateShipPosition() {
     boxes[shipData.currentPositon].classList.add('ship')
 }
 
+function verifyHit() {
+    const boxes = document.querySelectorAll('.grid div')
+
+    if(boxes[shotData.currentPositon].classList[0] == 'enemy' || boxes[shotData.currentPositon].classList[0] == 'img2') {
+        shotData.thereIsAShot = false
+        boxes[shotData.currentPositon].classList.remove('shot')
+        boxes[shotData.currentPositon].classList.remove('enemy')
+        boxes[shotData.currentPositon].classList.remove('img2')
+        gameStatus.score += 5
+        console.log(gameStatus.score)
+    } 
+    
+    else if(boxes[shotData.currentPositon].offsetTop <= boxes[0].offsetTop) {
+        shotData.thereIsAShot = false
+        boxes[shotData.currentPositon].classList.remove('shot')
+    }
+}
+
 function updateShotPosition() {
     const boxes = document.querySelectorAll('.grid div')
     const nextPosition = 19
@@ -120,18 +135,7 @@ function updateShotPosition() {
     boxes[shotData.currentPositon].classList.add('shot')
     shotData.lastPosition =  shotData.currentPositon + nextPosition
     boxes[shotData.lastPosition].classList.remove('shot')
-    
-    if(boxes[shotData.currentPositon].classList[0] == 'enemy' || boxes[shotData.currentPositon].classList[0] == 'img2') {
-        shotData.thereIsAShot = false
-        boxes[shotData.currentPositon].classList.remove('shot')
-        boxes[shotData.currentPositon].classList.remove('enemy')
-        boxes[shotData.currentPositon].classList.remove('img2')
-    } 
-    
-    else if(boxes[shotData.currentPositon].offsetTop <= boxes[0].offsetTop) {
-        shotData.thereIsAShot = false
-        boxes[shotData.currentPositon].classList.remove('shot')
-    }
+    verifyHit()
 }
 
 function verifyGameOver() {
@@ -214,6 +218,8 @@ function updateEnemyPosition() {
     verifyGameOver()
 }
 
+// mona-github-github-g59jpq2w5w7.github.dev
+
 function jumpToDown() {
     const boxes = document.querySelectorAll('.grid div')
     const enemys = document.querySelectorAll('.enemy')
@@ -248,6 +254,11 @@ function jumpToDown() {
     }
 }
 
+function updateScore() {
+    const score = document.querySelector('.score-content')
+    score.innerHTML = `Score: ${gameStatus.score}`
+}
+
 function verifyVictory() {
     const totalEnemys = document.querySelectorAll('.enemy')
     totalEnemys.length == 0 ? gameStatus.victory = true : gameStatus.victory = false
@@ -275,6 +286,7 @@ function loop() {
     updateShipPosition()
     shotData.thereIsAShot && updateShotPosition()
     jumpToDown()
+    updateScore()
     verifyVictory()
     requestAnimationFrame(loop)
 }
@@ -283,18 +295,28 @@ const keypressed = verifyKeyPressed()
 const notify = observer()
 
 window.onload = () => {
+    const popUp = document.querySelector('.game-over-container')
+    const finalScore = document.querySelector('.final-score')
+    const title = document.querySelector('.game-over-text p')
+
     keypressed.callShipFunctions()
     notify.addFunction(createBoxes)
     notify.addFunction(renderShip)
     notify.addFunction(renderEnemy)
     notify.callFunctions()
 
+    document.querySelector('.play-again-btt').addEventListener('click', () => {
+        location.reload()
+    })
+
     let enemyPosition = setInterval(i => {
         !gameStatus.poused && updateEnemyPosition()
 
         if(gameStatus.victory || gameStatus.gameOver) {
             clearInterval(enemyPosition)
-            gameStatus.victory ? alert('Win') : alert('Game over')
+            gameStatus.victory ? title.innerHTML = 'WINNER' : title.innerHTML = 'GAME<br>OVER'
+            finalScore.innerHTML = gameStatus.score
+            popUp.style.display = "flex"
         }
     }, gameStatus.speed)
     loop()
