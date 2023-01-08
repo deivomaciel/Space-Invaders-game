@@ -10,4 +10,4 @@
   <img src="https://img.shields.io/badge/STATUS-EM%20DESENVOLVIMENTO-green?style=for-the-badge"/>
 </p>
 
-<h2>Link do jogo: <a href="https://spaceinvaderss.vercel.app/">https://spaceinvaderss.vercel.app/</a></h2>
+<h2>Link do jogo: <a target="_blank" href="https://spaceinvaderss.vercel.app/">https://spaceinvaderss.vercel.app/</a></h2>
